@@ -98,11 +98,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _imgs_platform_png__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./imgs/platform.png */ "./src/js/imgs/platform.png");
 /* harmony import */ var _imgs_hills_png__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./imgs/hills.png */ "./src/js/imgs/hills.png");
 /* harmony import */ var _imgs_background_png__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./imgs/background.png */ "./src/js/imgs/background.png");
+/* harmony import */ var _imgs_platformSmallTall_png__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./imgs/platformSmallTall.png */ "./src/js/imgs/platformSmallTall.png");
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
 
 
 
@@ -127,6 +129,7 @@ var Player = /*#__PURE__*/function () {
     };
     this.width = 30;
     this.height = 30;
+    this.speed = 20;
   }
 
   _createClass(Player, [{
@@ -141,7 +144,7 @@ var Player = /*#__PURE__*/function () {
       this.draw();
       this.position.x += this.velocity.x;
       this.position.y += this.velocity.y;
-      if (this.position.y + this.height + this.velocity.y <= canvas.height) this.velocity.y += gravity;else this.velocity.y = 0;
+      if (this.position.y + this.height + this.velocity.y <= canvas.height) this.velocity.y += gravity; // else this.velocity.y = 0;
     }
   }]);
 
@@ -202,8 +205,9 @@ var createImage = function createImage(imageSrc) {
 
 var player = new Player();
 var platformImage = createImage(_imgs_platform_png__WEBPACK_IMPORTED_MODULE_0__["default"]);
-var platforms = [new Platform(-1, 470, platformImage), new Platform(platformImage.width - 3, 470, platformImage)];
-var genericObjects = [new GenericObject(-1, -1, createImage(_imgs_background_png__WEBPACK_IMPORTED_MODULE_2__["default"])), new GenericObject(-1, -1, createImage(_imgs_hills_png__WEBPACK_IMPORTED_MODULE_1__["default"]))];
+var platformSmallTallImage = createImage(_imgs_platformSmallTall_png__WEBPACK_IMPORTED_MODULE_3__["default"]);
+var platforms = [];
+var genericObjects = [];
 var keys = {
   right: {
     pressed: false
@@ -213,6 +217,13 @@ var keys = {
   }
 };
 var scrollOffset = 0;
+
+var init = function init() {
+  player = new Player();
+  platforms = [new Platform(platformImage.width * 4 + 300 - 2 + platformImage.width - platformSmallTallImage.width, 270, platformSmallTallImage), new Platform(-1, 470, platformImage), new Platform(platformImage.width - 3, 470, platformImage), new Platform(platformImage.width * 2 + 100, 470, platformImage), new Platform(platformImage.width * 3 + 300, 470, platformImage), new Platform(platformImage.width * 4 + 300 - 2, 470, platformImage), new Platform(platformImage.width * 5 + 700 - 2, 470, platformImage)];
+  genericObjects = [new GenericObject(-1, -1, createImage(_imgs_background_png__WEBPACK_IMPORTED_MODULE_2__["default"])), new GenericObject(-1, -1, createImage(_imgs_hills_png__WEBPACK_IMPORTED_MODULE_1__["default"]))];
+  scrollOffset = 0;
+};
 
 var animate = function animate() {
   requestAnimationFrame(animate);
@@ -228,27 +239,27 @@ var animate = function animate() {
   player.update();
 
   if (keys.right.pressed && player.position.x < 400) {
-    player.velocity.x = 5;
+    player.velocity.x = player.speed;
   } else if (keys.left.pressed && player.position.x > 100) {
-    player.velocity.x = -5;
+    player.velocity.x = -player.speed;
   } else {
     player.velocity.x = 0;
 
     if (keys.right.pressed) {
-      scrollOffset += 5;
+      scrollOffset += player.speed;
       platforms.forEach(function (platform) {
-        platform.position.x -= 5;
+        platform.position.x -= player.speed;
       });
       genericObjects.forEach(function (object) {
-        object.position.x -= 3;
+        object.position.x -= player.speed * .66;
       });
     } else if (keys.left.pressed) {
-      scrollOffset -= 5;
+      scrollOffset -= player.speed;
       platforms.forEach(function (platform) {
-        platform.position.x += 5;
+        platform.position.x += player.speed;
       });
       genericObjects.forEach(function (object) {
-        object.position.x += 5;
+        object.position.x += player.speed * .66;
       });
     }
   } // Platform collision detection
@@ -260,11 +271,17 @@ var animate = function animate() {
     }
   });
 
-  if (scrollOffset > 2000) {
+  if (scrollOffset > platformImage.width * 5 + 900 - 2) {
     console.log("You win");
+  } // Lose condition
+
+
+  if (player.position.y > canvas.height) {
+    init();
   }
 };
 
+init();
 animate();
 addEventListener("keydown", function (_ref) {
   var keyCode = _ref.keyCode;
@@ -284,7 +301,7 @@ addEventListener("keydown", function (_ref) {
       break;
 
     case 87:
-      player.velocity.y -= 20;
+      player.velocity.y -= 10;
       break;
   }
 });
@@ -349,6 +366,19 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ __webpack_exports__["default"] = (__webpack_require__.p + "ffab39d3487de561be1a081fcfb3806d.png");
+
+/***/ }),
+
+/***/ "./src/js/imgs/platformSmallTall.png":
+/*!*******************************************!*\
+  !*** ./src/js/imgs/platformSmallTall.png ***!
+  \*******************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony default export */ __webpack_exports__["default"] = (__webpack_require__.p + "0587f9be8e442eb74b2fe283bbf1a947.png");
 
 /***/ })
 
